@@ -1,5 +1,7 @@
 #pragma once
 
+#include "frmAddBook.h"
+
 using namespace System;
 using namespace System::ComponentModel;
 using namespace System::Collections;
@@ -41,6 +43,8 @@ namespace Library {
 				delete components;
 			}
 		}
+	private: System::Windows::Forms::Button^  btnAdd;
+	protected: 
 
 	private:
 		/// <summary>
@@ -55,12 +59,34 @@ namespace Library {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->components = gcnew System::ComponentModel::Container();
-			this->Size = System::Drawing::Size(300,300);
-			this->Text = L"frmMain";
-			this->Padding = System::Windows::Forms::Padding(0);
+			this->btnAdd = (gcnew System::Windows::Forms::Button());
+			this->SuspendLayout();
+			// 
+			// btnAdd
+			// 
+			this->btnAdd->Location = System::Drawing::Point(12, 12);
+			this->btnAdd->Name = L"btnAdd";
+			this->btnAdd->Size = System::Drawing::Size(118, 54);
+			this->btnAdd->TabIndex = 0;
+			this->btnAdd->Text = L"Add Book";
+			this->btnAdd->UseVisualStyleBackColor = true;
+			this->btnAdd->Click += gcnew System::EventHandler(this, &frmMain::btnAdd_Click);
+			// 
+			// frmMain
+			// 
+			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-        }
+			this->ClientSize = System::Drawing::Size(585, 345);
+			this->Controls->Add(this->btnAdd);
+			this->Name = L"frmMain";
+			this->Text = L"Library";
+			this->ResumeLayout(false);
+
+		}
 #pragma endregion
+	private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  e) {
+				 frmAddBook^ frm = gcnew frmAddBook();
+				 frm->Show();
+			 }
 	};
 }

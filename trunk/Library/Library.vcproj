@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\frmAddBook.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\frmMain.cpp"
 				>
 			</File>
@@ -234,9 +238,24 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\frmAddBook.h"
+				FileType="3"
+				>
+				<File
+					RelativePath=".\frmAddBook.resx"
+					SubType="Designer"
+					>
+				</File>
+			</File>
+			<File
 				RelativePath=".\frmMain.h"
 				FileType="3"
 				>
+				<File
+					RelativePath=".\frmMain.resx"
+					SubType="Designer"
+					>
+				</File>
 			</File>
 			<File
 				RelativePath=".\resource.h"
