@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GlobalConnection.h"
 #include "frmAddBook.h"
 
 using namespace System;
@@ -80,6 +81,7 @@ namespace Library {
 			this->Controls->Add(this->btnAdd);
 			this->Name = L"frmMain";
 			this->Text = L"Library";
+			this->Load += gcnew System::EventHandler(this, &frmMain::frmMain_Load);
 			this->ResumeLayout(false);
 
 		}
@@ -87,6 +89,9 @@ namespace Library {
 	private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  e) {
 				 frmAddBook^ frm = gcnew frmAddBook();
 				 frm->Show();
+			 }
+	private: System::Void frmMain_Load(System::Object^  sender, System::EventArgs^  e) {
+				 GlobalConnection::OpenConnection();
 			 }
 	};
 }
