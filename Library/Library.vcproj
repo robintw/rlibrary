@@ -208,6 +208,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GlobalConnection.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Library.cpp"
 				>
 			</File>
@@ -258,6 +262,10 @@
 				</File>
 			</File>
 			<File
+				RelativePath=".\GlobalConnection.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource.h"
 				>
 			</File>
@@ -280,10 +288,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

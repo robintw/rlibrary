@@ -1,3 +1,4 @@
+#include "GlobalConnection.h"
 
 using namespace System;
 using namespace System::ComponentModel;
@@ -341,17 +342,20 @@ namespace Library {
 			this->btnAdd->Name = L"btnAdd";
 			this->btnAdd->Size = System::Drawing::Size(75, 32);
 			this->btnAdd->TabIndex = 20;
-			this->btnAdd->Text = L"Add";
+			this->btnAdd->Text = L"&Add";
 			this->btnAdd->UseVisualStyleBackColor = true;
+			this->btnAdd->Click += gcnew System::EventHandler(this, &frmAddBook::btnAdd_Click);
 			// 
 			// btnCancel
 			// 
+			this->btnCancel->DialogResult = System::Windows::Forms::DialogResult::Cancel;
 			this->btnCancel->Location = System::Drawing::Point(134, 329);
 			this->btnCancel->Name = L"btnCancel";
 			this->btnCancel->Size = System::Drawing::Size(75, 32);
 			this->btnCancel->TabIndex = 20;
-			this->btnCancel->Text = L"Cancel";
+			this->btnCancel->Text = L"&Cancel";
 			this->btnCancel->UseVisualStyleBackColor = true;
+			this->btnCancel->Click += gcnew System::EventHandler(this, &frmAddBook::btnCancel_Click);
 			// 
 			// llbAmazon
 			// 
@@ -368,6 +372,7 @@ namespace Library {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->CancelButton = this->btnCancel;
 			this->ClientSize = System::Drawing::Size(589, 363);
 			this->Controls->Add(this->llbAmazon);
 			this->Controls->Add(this->btnCancel);
@@ -451,6 +456,11 @@ namespace Library {
 				  {
 					  txtTitle->Text = nodTitle->InnerText;
 				  }
+				  else
+				  {
+					  //If there's no title then no data has been returned - so set focus to title field for manual input
+					  txtTitle->Focus();
+				  }
 
 				  XmlNode^ nodAuthor = xmldoc->SelectSingleNode("//a:Author", namesp);
 				  if (nodAuthor != nullptr)
@@ -526,6 +536,26 @@ private: System::Void txtISBN_KeyUp(System::Object^  sender, System::Windows::Fo
 		 }
 private: System::Void llbAmazon_LinkClicked(System::Object^  sender, System::Windows::Forms::LinkLabelLinkClickedEventArgs^  e) {
 			 System::Diagnostics::Process::Start(DetailsURL);
+		 }
+private: System::Void btnCancel_Click(System::Object^  sender, System::EventArgs^  e) {
+			 ClearAllFields();
+			 txtISBN->Focus();
+		 }
+private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  e) {
+			 String^ CommandText = "INSERT INTO Books (Title, Author, Publisher) VALUES (?, ?, ?);";
+
+			 OdbcCommand^ cmd = gcnew OdbcCommand(CommandText, GlobalConnection::conn);
+
+			 OdbcParameter^ paramTitle = gcnew OdbcParameter("@Title", txtTitle->Text);
+			 cmd->Parameters->Add(paramTitle);
+
+			 OdbcParameter^ paramAuthor = gcnew OdbcParameter("@Author", txtAuthor->Text);
+			 cmd->Parameters->Add(paramAuthor);
+
+			 OdbcParameter^ paramPublisher = gcnew OdbcParameter("@Publisher", txtPublisher->Text);
+			 cmd->Parameters->Add(paramPublisher);
+
+			 cmd->ExecuteNonQuery();
 		 }
 };
 }
