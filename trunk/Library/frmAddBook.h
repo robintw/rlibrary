@@ -7,6 +7,8 @@ using namespace System::Windows::Forms;
 using namespace System::Data;
 using namespace System::Drawing;
 using namespace System::Xml;
+using namespace System::IO;
+using namespace System::Net;
 
 
 namespace Library {
@@ -137,7 +139,7 @@ namespace Library {
 			this->txtISBN->Name = L"txtISBN";
 			this->txtISBN->Size = System::Drawing::Size(68, 20);
 			this->txtISBN->TabIndex = 0;
-			this->txtISBN->Text = L"0340663138";
+			this->txtISBN->Text = L"1893115941";
 			this->txtISBN->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &frmAddBook::txtISBN_KeyUp);
 			// 
 			// label1
@@ -221,7 +223,7 @@ namespace Library {
 			// 
 			this->groupBox1->Controls->Add(this->radNonFiction);
 			this->groupBox1->Controls->Add(this->radFiction);
-			this->groupBox1->Location = System::Drawing::Point(15, 137);
+			this->groupBox1->Location = System::Drawing::Point(15, 262);
 			this->groupBox1->Name = L"groupBox1";
 			this->groupBox1->Size = System::Drawing::Size(194, 42);
 			this->groupBox1->TabIndex = 10;
@@ -242,7 +244,7 @@ namespace Library {
 			// label5
 			// 
 			this->label5->AutoSize = true;
-			this->label5->Location = System::Drawing::Point(12, 203);
+			this->label5->Location = System::Drawing::Point(12, 129);
 			this->label5->Name = L"label5";
 			this->label5->Size = System::Drawing::Size(124, 13);
 			this->label5->TabIndex = 12;
@@ -250,7 +252,7 @@ namespace Library {
 			// 
 			// txtDewey
 			// 
-			this->txtDewey->Location = System::Drawing::Point(139, 200);
+			this->txtDewey->Location = System::Drawing::Point(139, 126);
 			this->txtDewey->Name = L"txtDewey";
 			this->txtDewey->Size = System::Drawing::Size(70, 20);
 			this->txtDewey->TabIndex = 11;
@@ -259,7 +261,7 @@ namespace Library {
 			// 
 			this->groupBox2->Controls->Add(this->radPaperback);
 			this->groupBox2->Controls->Add(this->radHardback);
-			this->groupBox2->Location = System::Drawing::Point(15, 236);
+			this->groupBox2->Location = System::Drawing::Point(15, 162);
 			this->groupBox2->Name = L"groupBox2";
 			this->groupBox2->Size = System::Drawing::Size(194, 42);
 			this->groupBox2->TabIndex = 13;
@@ -291,7 +293,7 @@ namespace Library {
 			// label6
 			// 
 			this->label6->AutoSize = true;
-			this->label6->Location = System::Drawing::Point(12, 287);
+			this->label6->Location = System::Drawing::Point(12, 213);
 			this->label6->Name = L"label6";
 			this->label6->Size = System::Drawing::Size(40, 13);
 			this->label6->TabIndex = 15;
@@ -299,7 +301,7 @@ namespace Library {
 			// 
 			// txtPages
 			// 
-			this->txtPages->Location = System::Drawing::Point(58, 284);
+			this->txtPages->Location = System::Drawing::Point(58, 210);
 			this->txtPages->Name = L"txtPages";
 			this->txtPages->Size = System::Drawing::Size(45, 20);
 			this->txtPages->TabIndex = 14;
@@ -307,7 +309,7 @@ namespace Library {
 			// label7
 			// 
 			this->label7->AutoSize = true;
-			this->label7->Location = System::Drawing::Point(109, 287);
+			this->label7->Location = System::Drawing::Point(109, 213);
 			this->label7->Name = L"label7";
 			this->label7->Size = System::Drawing::Size(42, 13);
 			this->label7->TabIndex = 17;
@@ -315,7 +317,7 @@ namespace Library {
 			// 
 			// txtEdition
 			// 
-			this->txtEdition->Location = System::Drawing::Point(164, 284);
+			this->txtEdition->Location = System::Drawing::Point(164, 210);
 			this->txtEdition->Name = L"txtEdition";
 			this->txtEdition->Size = System::Drawing::Size(45, 20);
 			this->txtEdition->TabIndex = 16;
@@ -323,7 +325,7 @@ namespace Library {
 			// label8
 			// 
 			this->label8->AutoSize = true;
-			this->label8->Location = System::Drawing::Point(12, 313);
+			this->label8->Location = System::Drawing::Point(12, 239);
 			this->label8->Name = L"label8";
 			this->label8->Size = System::Drawing::Size(88, 13);
 			this->label8->TabIndex = 19;
@@ -331,16 +333,16 @@ namespace Library {
 			// 
 			// txtPubDate
 			// 
-			this->txtPubDate->Location = System::Drawing::Point(106, 310);
+			this->txtPubDate->Location = System::Drawing::Point(106, 236);
 			this->txtPubDate->Name = L"txtPubDate";
 			this->txtPubDate->Size = System::Drawing::Size(103, 20);
 			this->txtPubDate->TabIndex = 18;
 			// 
 			// btnAdd
 			// 
-			this->btnAdd->Location = System::Drawing::Point(12, 329);
+			this->btnAdd->Location = System::Drawing::Point(380, 332);
 			this->btnAdd->Name = L"btnAdd";
-			this->btnAdd->Size = System::Drawing::Size(75, 32);
+			this->btnAdd->Size = System::Drawing::Size(95, 32);
 			this->btnAdd->TabIndex = 20;
 			this->btnAdd->Text = L"&Add";
 			this->btnAdd->UseVisualStyleBackColor = true;
@@ -349,9 +351,9 @@ namespace Library {
 			// btnCancel
 			// 
 			this->btnCancel->DialogResult = System::Windows::Forms::DialogResult::Cancel;
-			this->btnCancel->Location = System::Drawing::Point(134, 329);
+			this->btnCancel->Location = System::Drawing::Point(484, 332);
 			this->btnCancel->Name = L"btnCancel";
-			this->btnCancel->Size = System::Drawing::Size(75, 32);
+			this->btnCancel->Size = System::Drawing::Size(95, 32);
 			this->btnCancel->TabIndex = 20;
 			this->btnCancel->Text = L"&Cancel";
 			this->btnCancel->UseVisualStyleBackColor = true;
@@ -373,7 +375,7 @@ namespace Library {
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->CancelButton = this->btnCancel;
-			this->ClientSize = System::Drawing::Size(589, 363);
+			this->ClientSize = System::Drawing::Size(627, 399);
 			this->Controls->Add(this->llbAmazon);
 			this->Controls->Add(this->btnCancel);
 			this->Controls->Add(this->btnAdd);
@@ -429,6 +431,8 @@ namespace Library {
 
 				  radHardback->Checked = false;
 				  radPaperback->Checked = false;
+
+				  picImage->Image = nullptr;
 			  }
 
 	 private: System::Void GetDetailsFromInternet()
@@ -542,7 +546,7 @@ private: System::Void btnCancel_Click(System::Object^  sender, System::EventArgs
 			 txtISBN->Focus();
 		 }
 private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  e) {
-			 String^ CommandText = "INSERT INTO Books (Title, Author, Publisher) VALUES (?, ?, ?);";
+			 String^ CommandText = "INSERT INTO Books (Title, Author, Publisher, Type, Dewey, Binding, Pages, Edition, CoverImage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
 			 OdbcCommand^ cmd = gcnew OdbcCommand(CommandText, GlobalConnection::conn);
 
@@ -555,7 +559,46 @@ private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  
 			 OdbcParameter^ paramPublisher = gcnew OdbcParameter("@Publisher", txtPublisher->Text);
 			 cmd->Parameters->Add(paramPublisher);
 
+			 OdbcParameter^ paramType = gcnew OdbcParameter("@Type", radNonFiction->Checked);
+			 cmd->Parameters->Add(paramType);
+
+			 OdbcParameter^ paramDewey = gcnew OdbcParameter("@Dewey", txtDewey->Text);
+			 cmd->Parameters->Add(paramDewey);
+
+			 OdbcParameter^ paramBinding = gcnew OdbcParameter("@Binding", radHardback->Checked);
+			 cmd->Parameters->Add(paramBinding);
+
+			 OdbcParameter^ paramPages = gcnew OdbcParameter("@Pages", txtPages->Text);
+			 cmd->Parameters->Add(paramPages);
+
+			 OdbcParameter^ paramEdition = gcnew OdbcParameter("@Edition", txtEdition->Text);
+			 cmd->Parameters->Add(paramEdition);
+
+			 //Deal with inserting BLOB for CoverImage
+			 WebResponse^ resp = WebRequest::Create("http://ecx.images-amazon.com/images/I/51K7A0G3GZL.jpg")->GetResponse();
+			 IO::Stream^ s = resp->GetResponseStream();
+
+			 array<System::Byte>^ ByteArray = gcnew array<System::Byte>(Int16::MaxValue * 20);
+
+			 int BytesRead = s->Read(ByteArray, 0, 1);
+			 int TotalBytesRead = BytesRead;
+
+			 while (BytesRead != 0)
+			 {
+				 BytesRead = s->Read(ByteArray, TotalBytesRead, 1);
+				 TotalBytesRead = TotalBytesRead + BytesRead;
+			 }
+
+			 Array::Resize(ByteArray, TotalBytesRead);
+
+			 OdbcParameter^ paramCoverImage = gcnew OdbcParameter("@CoverImage", ByteArray);
+			 
+			 cmd->Parameters->Add(paramCoverImage);
+
 			 cmd->ExecuteNonQuery();
+
+			 ClearAllFields();
+			 txtISBN->Focus();
 		 }
 };
 }
