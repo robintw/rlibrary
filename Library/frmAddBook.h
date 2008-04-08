@@ -1,4 +1,3 @@
-#pragma once
 
 using namespace System;
 using namespace System::ComponentModel;
@@ -56,8 +55,9 @@ namespace Library {
 
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::TextBox^  txtPublisher;
+	private: System::Windows::Forms::PictureBox^  picImage;
 
-	private: System::Windows::Forms::PictureBox^  pictureBox1;
+
 	private: System::Windows::Forms::RadioButton^  radFiction;
 	private: System::Windows::Forms::GroupBox^  groupBox1;
 	private: System::Windows::Forms::RadioButton^  radNonFiction;
@@ -107,7 +107,7 @@ namespace Library {
 			this->txtAuthor = (gcnew System::Windows::Forms::TextBox());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->txtPublisher = (gcnew System::Windows::Forms::TextBox());
-			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
+			this->picImage = (gcnew System::Windows::Forms::PictureBox());
 			this->radFiction = (gcnew System::Windows::Forms::RadioButton());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->radNonFiction = (gcnew System::Windows::Forms::RadioButton());
@@ -125,7 +125,7 @@ namespace Library {
 			this->btnAdd = (gcnew System::Windows::Forms::Button());
 			this->btnCancel = (gcnew System::Windows::Forms::Button());
 			this->llbAmazon = (gcnew System::Windows::Forms::LinkLabel());
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->picImage))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
 			this->SuspendLayout();
@@ -196,13 +196,14 @@ namespace Library {
 			this->txtPublisher->Size = System::Drawing::Size(141, 20);
 			this->txtPublisher->TabIndex = 6;
 			// 
-			// pictureBox1
+			// picImage
 			// 
-			this->pictureBox1->Location = System::Drawing::Point(269, 6);
-			this->pictureBox1->Name = L"pictureBox1";
-			this->pictureBox1->Size = System::Drawing::Size(310, 320);
-			this->pictureBox1->TabIndex = 8;
-			this->pictureBox1->TabStop = false;
+			this->picImage->Location = System::Drawing::Point(269, 6);
+			this->picImage->Name = L"picImage";
+			this->picImage->Size = System::Drawing::Size(310, 320);
+			this->picImage->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->picImage->TabIndex = 8;
+			this->picImage->TabStop = false;
 			// 
 			// radFiction
 			// 
@@ -381,7 +382,7 @@ namespace Library {
 			this->Controls->Add(this->label5);
 			this->Controls->Add(this->txtDewey);
 			this->Controls->Add(this->groupBox1);
-			this->Controls->Add(this->pictureBox1);
+			this->Controls->Add(this->picImage);
 			this->Controls->Add(this->label4);
 			this->Controls->Add(this->txtPublisher);
 			this->Controls->Add(this->label3);
@@ -390,10 +391,11 @@ namespace Library {
 			this->Controls->Add(this->txtTitle);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->txtISBN);
+			this->KeyPreview = true;
 			this->Name = L"frmAddBook";
 			this->Text = L"Library - Add Book";
 			this->Load += gcnew System::EventHandler(this, &frmAddBook::frmAddBook_Load);
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->picImage))->EndInit();
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();
 			this->groupBox2->ResumeLayout(false);
@@ -407,8 +409,26 @@ namespace Library {
 				 
 			 }
 
+	 private: System::Void ClearAllFields()
+			  {
+				  txtTitle->Text = "";
+				  txtAuthor->Text = "";
+				  txtPublisher->Text = "";
+				  txtPubDate->Text = "";
+				  txtDewey->Text = "";
+				  txtEdition->Text = "";
+				  txtPages->Text = "";
+
+				  radFiction->Checked = false;
+				  radNonFiction->Checked = false;
+
+				  radHardback->Checked = false;
+				  radPaperback->Checked = false;
+			  }
+
 	 private: System::Void GetDetailsFromInternet()
 			  {
+				  ClearAllFields();
 				  String^ ISBN = txtISBN->Text;
 
 				  XmlDocument^ xmldoc = gcnew XmlDocument();
@@ -417,23 +437,61 @@ namespace Library {
 
 				  xmldoc->Load(URL);
 
-				  Diagnostics::Debug::Print(URL);
+				  XmlNamespaceManager^ namesp = gcnew XmlNamespaceManager(xmldoc->NameTable);
+				  namesp->AddNamespace("a", "http://webservices.amazon.com/AWSECommerceService/2007-01-15");
 
-				  XmlNode^ start = xmldoc->ChildNodes[1]->ChildNodes[1]->ChildNodes[1];
-
-				  DetailsURL = start->ChildNodes[1]->InnerText;
-
-				  if (start->ChildNodes[2]->Name == "ItemAttributes")
+				  XmlNode^ nodDetails = xmldoc->SelectSingleNode("//a:DetailPageURL", namesp);
+				  if (nodDetails != nullptr)
 				  {
-					  txtTitle->Text = start->ChildNodes[2]->ChildNodes[18]->InnerText;
-					  txtAuthor->Text = start->ChildNodes[2]->ChildNodes[0]->InnerText;
-					  txtPublisher->Text = start->ChildNodes[2]->ChildNodes[16]->InnerText;
-					  txtDewey->Text = start->ChildNodes[2]->ChildNodes[2]->InnerText;
-					  txtPages->Text = start->ChildNodes[2]->ChildNodes[11]->InnerText;
-					  txtEdition->Text = start->ChildNodes[2]->ChildNodes[4]->InnerText;
-					  txtPubDate->Text = start->ChildNodes[2]->ChildNodes[15]->InnerText;
+					  DetailsURL = nodDetails->InnerText->Replace(".com", ".co.uk");
+				  }
 
-					  if (start->ChildNodes[2]->ChildNodes[1]->InnerText == "Paperback")
+				  XmlNode^ nodTitle = xmldoc->SelectSingleNode("//a:Title", namesp);
+				  if (nodTitle != nullptr)
+				  {
+					  txtTitle->Text = nodTitle->InnerText;
+				  }
+
+				  XmlNode^ nodAuthor = xmldoc->SelectSingleNode("//a:Author", namesp);
+				  if (nodAuthor != nullptr)
+				  {
+					  txtAuthor->Text = nodAuthor->InnerText;
+				  }
+
+				  XmlNode^ nodPublisher = xmldoc->SelectSingleNode("//a:Publisher", namesp);
+				  if (nodPublisher != nullptr)
+				  {
+					  txtPublisher->Text = nodPublisher->InnerText;
+				  }
+
+				  XmlNode^ nodDewey = xmldoc->SelectSingleNode("//a:DeweyDecimalNumber", namesp);
+				  if (nodDewey != nullptr)
+				  {
+					  txtDewey->Text = nodDewey->InnerText;
+				  }
+
+				  XmlNode^ nodPages = xmldoc->SelectSingleNode("//a:NumberOfPages", namesp);
+				  if (nodPages != nullptr)
+				  {
+					  txtPages->Text = nodPages->InnerText;
+				  }
+
+				  XmlNode^ nodEdition = xmldoc->SelectSingleNode("//a:Edition", namesp);
+				  if (nodEdition != nullptr)
+				  {
+					  txtEdition->Text = nodEdition->InnerText;
+				  }
+
+				  XmlNode^ nodPubDate = xmldoc->SelectSingleNode("//a:PublicationDate", namesp);
+				  if (nodPubDate != nullptr)
+				  {
+					  txtPubDate->Text = nodPubDate->InnerText;
+				  }
+
+				  XmlNode^ nodBinding = xmldoc->SelectSingleNode("//a:Binding", namesp);
+				  if (nodBinding != nullptr)
+				  {
+					  if (nodBinding->InnerText == "Paperback")
 					  {
 						  radPaperback->Checked = true;
 					  }
@@ -441,26 +499,22 @@ namespace Library {
 					  {
 						  radHardback->Checked = true;
 					  }
+				  }
+
+				  XmlNode^ nodImage = xmldoc->SelectSingleNode("//a:LargeImage/a:URL", namesp);
+				  if (nodImage != nullptr)
+				  {
+					  picImage->Load(nodImage->InnerText);
 				  }
 				  else
 				  {
-					  txtTitle->Text = start->ChildNodes[6]->ChildNodes[18]->InnerText;
-					  txtAuthor->Text = start->ChildNodes[6]->ChildNodes[0]->InnerText;
-					  txtPublisher->Text = start->ChildNodes[6]->ChildNodes[16]->InnerText;
-					  txtDewey->Text = start->ChildNodes[6]->ChildNodes[2]->InnerText;
-					  txtPages->Text = start->ChildNodes[6]->ChildNodes[11]->InnerText;
-					  txtEdition->Text = start->ChildNodes[6]->ChildNodes[4]->InnerText;
-					  txtPubDate->Text = start->ChildNodes[6]->ChildNodes[15]->InnerText;
-
-					  if (start->ChildNodes[6]->ChildNodes[1]->InnerText == "Paperback")
-					  {
-						  radPaperback->Checked = true;
-					  }
-					  else
-					  {
-						  radHardback->Checked = true;
-					  }
+					  Graphics^ g = picImage->CreateGraphics();
+					  SizeF^ s = g->MeasureString("No image available", this->Font);
+					  g->DrawString("No image available",this->Font, Brushes::Black, (picImage->Width / (float) 2) - (s->Width / (float) 2), picImage->Height / (float) 2);
+					  
 				  }
+
+				  radFiction->Focus();
 
 
 			  }
@@ -471,7 +525,6 @@ private: System::Void txtISBN_KeyUp(System::Object^  sender, System::Windows::Fo
 			 }
 		 }
 private: System::Void llbAmazon_LinkClicked(System::Object^  sender, System::Windows::Forms::LinkLabelLinkClickedEventArgs^  e) {
-			 MessageBox::Show(DetailsURL);
 			 System::Diagnostics::Process::Start(DetailsURL);
 		 }
 };
