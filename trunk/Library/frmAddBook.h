@@ -1,4 +1,5 @@
 #include "GlobalConnection.h"
+#include "ISBNOps.h"
 
 using namespace System;
 using namespace System::ComponentModel;
@@ -487,6 +488,9 @@ namespace Library {
 				  txtDewey->Text = "";
 				  txtEdition->Text = "";
 				  txtPages->Text = "";
+				  txtPriceBought->Text = "";
+
+				  chkRead->Checked = false;
 
 				  radFiction->Checked = false;
 				  radNonFiction->Checked = false;
@@ -495,6 +499,7 @@ namespace Library {
 				  radPaperback->Checked = false;
 
 				  picImage->Image = nullptr;
+				  picImage->ImageLocation = nullptr;
 			  }
 
 	 private: System::Void GetDetailsFromInternet()
@@ -526,6 +531,7 @@ namespace Library {
 				  {
 					  //If there's no title then no data has been returned - so set focus to title field for manual input
 					  txtTitle->Focus();
+					  return;
 				  }
 
 				  XmlNode^ nodAuthor = xmldoc->SelectSingleNode("//a:Author", namesp);
@@ -597,6 +603,7 @@ namespace Library {
 private: System::Void txtISBN_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
 			 if (e->KeyCode == Keys::Return)
 			 {
+				 txtISBN->Text = ISBNOps::Process(txtISBN->Text);
 				 GetDetailsFromInternet();
 			 }
 		 }
@@ -648,26 +655,34 @@ private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  
 			 OdbcParameter^ paramPriceBought = gcnew OdbcParameter("@PriceBought", txtPriceBought->Text);
 			 cmd->Parameters->Add(paramPriceBought);
 
-			 //Deal with inserting BLOB for CoverImage
-			 WebResponse^ resp = WebRequest::Create(picImage->ImageLocation)->GetResponse();
-			 IO::Stream^ s = resp->GetResponseStream();
-
-			 array<System::Byte>^ ByteArray = gcnew array<System::Byte>(Int16::MaxValue * 20);
-
-			 int BytesRead = s->Read(ByteArray, 0, 1);
-			 int TotalBytesRead = BytesRead;
-
-			 while (BytesRead != 0)
+			 if (picImage->ImageLocation != nullptr)
 			 {
-				 BytesRead = s->Read(ByteArray, TotalBytesRead, 1);
-				 TotalBytesRead = TotalBytesRead + BytesRead;
+				 //Deal with inserting BLOB for CoverImage
+				 WebResponse^ resp = WebRequest::Create(picImage->ImageLocation)->GetResponse();
+				 IO::Stream^ s = resp->GetResponseStream();
+
+				 array<System::Byte>^ ByteArray = gcnew array<System::Byte>(Int16::MaxValue * 20);
+
+				 int BytesRead = s->Read(ByteArray, 0, 1);
+				 int TotalBytesRead = BytesRead;
+
+				 while (BytesRead != 0)
+				 {
+					 BytesRead = s->Read(ByteArray, TotalBytesRead, 1);
+					 TotalBytesRead = TotalBytesRead + BytesRead;
+				 }
+
+				 Array::Resize(ByteArray, TotalBytesRead);
+
+				 OdbcParameter^ paramCoverImage = gcnew OdbcParameter("@CoverImage", ByteArray);
+				 
+				 cmd->Parameters->Add(paramCoverImage);
 			 }
-
-			 Array::Resize(ByteArray, TotalBytesRead);
-
-			 OdbcParameter^ paramCoverImage = gcnew OdbcParameter("@CoverImage", ByteArray);
-			 
-			 cmd->Parameters->Add(paramCoverImage);
+			 else
+			 {
+				 OdbcParameter^ paramCoverImage = gcnew OdbcParameter("@CoverImage", nullptr);
+				 cmd->Parameters->Add(paramCoverImage);
+			 }
 
 			 cmd->ExecuteNonQuery();
 
@@ -676,6 +691,7 @@ private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  
 		 }
 private: System::Void btnClear_Click(System::Object^  sender, System::EventArgs^  e) {
 			 ClearAllFields();
+			 txtISBN->Text = "";
 			 txtISBN->Focus();
 		 }
 };

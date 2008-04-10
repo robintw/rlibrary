@@ -212,6 +212,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ISBNOps.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Library.cpp"
 				>
 			</File>
@@ -263,6 +267,10 @@
 			</File>
 			<File
 				RelativePath=".\GlobalConnection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ISBNOps.h"
 				>
 			</File>
 			<File
