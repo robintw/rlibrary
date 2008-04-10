@@ -82,6 +82,13 @@ namespace Library {
 	private: System::Windows::Forms::Button^  btnAdd;
 	private: System::Windows::Forms::Button^  btnCancel;
 	private: System::Windows::Forms::LinkLabel^  llbAmazon;
+	private: System::Windows::Forms::Label^  label9;
+	private: System::Windows::Forms::TextBox^  txtPriceBought;
+	private: System::Windows::Forms::Label^  label10;
+	private: System::Windows::Forms::CheckBox^  chkRead;
+	private: System::Windows::Forms::Button^  btnClear;
+
+
 
 
 
@@ -128,6 +135,11 @@ namespace Library {
 			this->btnAdd = (gcnew System::Windows::Forms::Button());
 			this->btnCancel = (gcnew System::Windows::Forms::Button());
 			this->llbAmazon = (gcnew System::Windows::Forms::LinkLabel());
+			this->label9 = (gcnew System::Windows::Forms::Label());
+			this->txtPriceBought = (gcnew System::Windows::Forms::TextBox());
+			this->label10 = (gcnew System::Windows::Forms::Label());
+			this->chkRead = (gcnew System::Windows::Forms::CheckBox());
+			this->btnClear = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->picImage))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
@@ -203,7 +215,7 @@ namespace Library {
 			// 
 			this->picImage->Location = System::Drawing::Point(269, 6);
 			this->picImage->Name = L"picImage";
-			this->picImage->Size = System::Drawing::Size(310, 320);
+			this->picImage->Size = System::Drawing::Size(297, 320);
 			this->picImage->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
 			this->picImage->TabIndex = 8;
 			this->picImage->TabStop = false;
@@ -340,7 +352,7 @@ namespace Library {
 			// 
 			// btnAdd
 			// 
-			this->btnAdd->Location = System::Drawing::Point(380, 332);
+			this->btnAdd->Location = System::Drawing::Point(269, 332);
 			this->btnAdd->Name = L"btnAdd";
 			this->btnAdd->Size = System::Drawing::Size(95, 32);
 			this->btnAdd->TabIndex = 20;
@@ -351,7 +363,7 @@ namespace Library {
 			// btnCancel
 			// 
 			this->btnCancel->DialogResult = System::Windows::Forms::DialogResult::Cancel;
-			this->btnCancel->Location = System::Drawing::Point(484, 332);
+			this->btnCancel->Location = System::Drawing::Point(471, 332);
 			this->btnCancel->Name = L"btnCancel";
 			this->btnCancel->Size = System::Drawing::Size(95, 32);
 			this->btnCancel->TabIndex = 20;
@@ -362,7 +374,7 @@ namespace Library {
 			// llbAmazon
 			// 
 			this->llbAmazon->AutoSize = true;
-			this->llbAmazon->Location = System::Drawing::Point(266, 339);
+			this->llbAmazon->Location = System::Drawing::Point(101, 339);
 			this->llbAmazon->Name = L"llbAmazon";
 			this->llbAmazon->Size = System::Drawing::Size(108, 13);
 			this->llbAmazon->TabIndex = 21;
@@ -370,14 +382,64 @@ namespace Library {
 			this->llbAmazon->Text = L"Amazon Details Page";
 			this->llbAmazon->LinkClicked += gcnew System::Windows::Forms::LinkLabelLinkClickedEventHandler(this, &frmAddBook::llbAmazon_LinkClicked);
 			// 
+			// label9
+			// 
+			this->label9->AutoSize = true;
+			this->label9->Location = System::Drawing::Point(12, 313);
+			this->label9->Name = L"label9";
+			this->label9->Size = System::Drawing::Size(71, 13);
+			this->label9->TabIndex = 23;
+			this->label9->Text = L"Price Bought:";
+			// 
+			// txtPriceBought
+			// 
+			this->txtPriceBought->Location = System::Drawing::Point(97, 310);
+			this->txtPriceBought->Name = L"txtPriceBought";
+			this->txtPriceBought->Size = System::Drawing::Size(70, 20);
+			this->txtPriceBought->TabIndex = 22;
+			// 
+			// label10
+			// 
+			this->label10->AutoSize = true;
+			this->label10->Location = System::Drawing::Point(84, 313);
+			this->label10->Name = L"label10";
+			this->label10->Size = System::Drawing::Size(13, 13);
+			this->label10->TabIndex = 24;
+			this->label10->Text = L"£";
+			// 
+			// chkRead
+			// 
+			this->chkRead->AutoSize = true;
+			this->chkRead->Location = System::Drawing::Point(15, 338);
+			this->chkRead->Name = L"chkRead";
+			this->chkRead->Size = System::Drawing::Size(52, 17);
+			this->chkRead->TabIndex = 25;
+			this->chkRead->Text = L"Read";
+			this->chkRead->UseVisualStyleBackColor = true;
+			// 
+			// btnClear
+			// 
+			this->btnClear->Location = System::Drawing::Point(370, 332);
+			this->btnClear->Name = L"btnClear";
+			this->btnClear->Size = System::Drawing::Size(95, 32);
+			this->btnClear->TabIndex = 20;
+			this->btnClear->Text = L"Clear";
+			this->btnClear->UseVisualStyleBackColor = true;
+			this->btnClear->Click += gcnew System::EventHandler(this, &frmAddBook::btnClear_Click);
+			// 
 			// frmAddBook
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->CancelButton = this->btnCancel;
-			this->ClientSize = System::Drawing::Size(627, 399);
+			this->ClientSize = System::Drawing::Size(576, 370);
+			this->Controls->Add(this->chkRead);
+			this->Controls->Add(this->label10);
+			this->Controls->Add(this->label9);
+			this->Controls->Add(this->txtPriceBought);
 			this->Controls->Add(this->llbAmazon);
 			this->Controls->Add(this->btnCancel);
+			this->Controls->Add(this->btnClear);
 			this->Controls->Add(this->btnAdd);
 			this->Controls->Add(this->label8);
 			this->Controls->Add(this->txtPubDate);
@@ -542,11 +604,10 @@ private: System::Void llbAmazon_LinkClicked(System::Object^  sender, System::Win
 			 System::Diagnostics::Process::Start(DetailsURL);
 		 }
 private: System::Void btnCancel_Click(System::Object^  sender, System::EventArgs^  e) {
-			 ClearAllFields();
-			 txtISBN->Focus();
+			 this->Close();
 		 }
 private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  e) {
-			 String^ CommandText = "INSERT INTO Books (Title, Author, Publisher, Type, Dewey, Binding, Pages, Edition, CoverImage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+			 String^ CommandText = "INSERT INTO Books (Title, Author, Publisher, Type, Dewey, Binding, Pages, Edition, PublicationDate, HaveRead, PriceBought, CoverImage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
 			 OdbcCommand^ cmd = gcnew OdbcCommand(CommandText, GlobalConnection::conn);
 
@@ -574,8 +635,21 @@ private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  
 			 OdbcParameter^ paramEdition = gcnew OdbcParameter("@Edition", txtEdition->Text);
 			 cmd->Parameters->Add(paramEdition);
 
+			 array<String^>^ Formats = gcnew array<String^> { "yyyy", "yyyy-MM", "yyyy-MM-dd" };
+			 DateTime date = DateTime::ParseExact(txtPubDate->Text,Formats, System::Globalization::CultureInfo::InvariantCulture, System::Globalization::DateTimeStyles::RoundtripKind);
+			 OdbcParameter^ paramPubDate = gcnew OdbcParameter("@PublicationDate", date);
+			 cmd->Parameters->Add(paramPubDate);
+
+
+
+			 OdbcParameter^ paramRead = gcnew OdbcParameter("@HaveRead", chkRead->Checked);
+			 cmd->Parameters->Add(paramRead);
+
+			 OdbcParameter^ paramPriceBought = gcnew OdbcParameter("@PriceBought", txtPriceBought->Text);
+			 cmd->Parameters->Add(paramPriceBought);
+
 			 //Deal with inserting BLOB for CoverImage
-			 WebResponse^ resp = WebRequest::Create("http://ecx.images-amazon.com/images/I/51K7A0G3GZL.jpg")->GetResponse();
+			 WebResponse^ resp = WebRequest::Create(picImage->ImageLocation)->GetResponse();
 			 IO::Stream^ s = resp->GetResponseStream();
 
 			 array<System::Byte>^ ByteArray = gcnew array<System::Byte>(Int16::MaxValue * 20);
@@ -597,6 +671,10 @@ private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  
 
 			 cmd->ExecuteNonQuery();
 
+			 ClearAllFields();
+			 txtISBN->Focus();
+		 }
+private: System::Void btnClear_Click(System::Object^  sender, System::EventArgs^  e) {
 			 ClearAllFields();
 			 txtISBN->Focus();
 		 }
