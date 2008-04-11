@@ -152,7 +152,6 @@ namespace Library {
 			this->txtISBN->Name = L"txtISBN";
 			this->txtISBN->Size = System::Drawing::Size(68, 20);
 			this->txtISBN->TabIndex = 0;
-			this->txtISBN->Text = L"1893115941";
 			this->txtISBN->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &frmAddBook::txtISBN_KeyUp);
 			// 
 			// label1
@@ -178,7 +177,7 @@ namespace Library {
 			this->txtTitle->Location = System::Drawing::Point(68, 48);
 			this->txtTitle->Name = L"txtTitle";
 			this->txtTitle->Size = System::Drawing::Size(195, 20);
-			this->txtTitle->TabIndex = 2;
+			this->txtTitle->TabIndex = 1;
 			// 
 			// label3
 			// 
@@ -194,7 +193,7 @@ namespace Library {
 			this->txtAuthor->Location = System::Drawing::Point(68, 74);
 			this->txtAuthor->Name = L"txtAuthor";
 			this->txtAuthor->Size = System::Drawing::Size(141, 20);
-			this->txtAuthor->TabIndex = 4;
+			this->txtAuthor->TabIndex = 2;
 			// 
 			// label4
 			// 
@@ -210,7 +209,7 @@ namespace Library {
 			this->txtPublisher->Location = System::Drawing::Point(68, 100);
 			this->txtPublisher->Name = L"txtPublisher";
 			this->txtPublisher->Size = System::Drawing::Size(141, 20);
-			this->txtPublisher->TabIndex = 6;
+			this->txtPublisher->TabIndex = 3;
 			// 
 			// picImage
 			// 
@@ -227,7 +226,7 @@ namespace Library {
 			this->radFiction->Location = System::Drawing::Point(6, 19);
 			this->radFiction->Name = L"radFiction";
 			this->radFiction->Size = System::Drawing::Size(56, 17);
-			this->radFiction->TabIndex = 9;
+			this->radFiction->TabIndex = 0;
 			this->radFiction->TabStop = true;
 			this->radFiction->Text = L"Fiction";
 			this->radFiction->UseVisualStyleBackColor = true;
@@ -268,7 +267,7 @@ namespace Library {
 			this->txtDewey->Location = System::Drawing::Point(139, 126);
 			this->txtDewey->Name = L"txtDewey";
 			this->txtDewey->Size = System::Drawing::Size(70, 20);
-			this->txtDewey->TabIndex = 11;
+			this->txtDewey->TabIndex = 4;
 			// 
 			// groupBox2
 			// 
@@ -298,7 +297,7 @@ namespace Library {
 			this->radHardback->Location = System::Drawing::Point(6, 19);
 			this->radHardback->Name = L"radHardback";
 			this->radHardback->Size = System::Drawing::Size(72, 17);
-			this->radHardback->TabIndex = 9;
+			this->radHardback->TabIndex = 0;
 			this->radHardback->TabStop = true;
 			this->radHardback->Text = L"Hardback";
 			this->radHardback->UseVisualStyleBackColor = true;
@@ -317,7 +316,7 @@ namespace Library {
 			this->txtPages->Location = System::Drawing::Point(58, 210);
 			this->txtPages->Name = L"txtPages";
 			this->txtPages->Size = System::Drawing::Size(45, 20);
-			this->txtPages->TabIndex = 14;
+			this->txtPages->TabIndex = 5;
 			// 
 			// label7
 			// 
@@ -333,7 +332,7 @@ namespace Library {
 			this->txtEdition->Location = System::Drawing::Point(164, 210);
 			this->txtEdition->Name = L"txtEdition";
 			this->txtEdition->Size = System::Drawing::Size(45, 20);
-			this->txtEdition->TabIndex = 16;
+			this->txtEdition->TabIndex = 6;
 			// 
 			// label8
 			// 
@@ -349,14 +348,14 @@ namespace Library {
 			this->txtPubDate->Location = System::Drawing::Point(106, 236);
 			this->txtPubDate->Name = L"txtPubDate";
 			this->txtPubDate->Size = System::Drawing::Size(103, 20);
-			this->txtPubDate->TabIndex = 18;
+			this->txtPubDate->TabIndex = 7;
 			// 
 			// btnAdd
 			// 
 			this->btnAdd->Location = System::Drawing::Point(269, 332);
 			this->btnAdd->Name = L"btnAdd";
 			this->btnAdd->Size = System::Drawing::Size(95, 32);
-			this->btnAdd->TabIndex = 20;
+			this->btnAdd->TabIndex = 10;
 			this->btnAdd->Text = L"&Add";
 			this->btnAdd->UseVisualStyleBackColor = true;
 			this->btnAdd->Click += gcnew System::EventHandler(this, &frmAddBook::btnAdd_Click);
@@ -397,7 +396,7 @@ namespace Library {
 			this->txtPriceBought->Location = System::Drawing::Point(97, 310);
 			this->txtPriceBought->Name = L"txtPriceBought";
 			this->txtPriceBought->Size = System::Drawing::Size(70, 20);
-			this->txtPriceBought->TabIndex = 22;
+			this->txtPriceBought->TabIndex = 8;
 			// 
 			// label10
 			// 
@@ -414,7 +413,7 @@ namespace Library {
 			this->chkRead->Location = System::Drawing::Point(15, 338);
 			this->chkRead->Name = L"chkRead";
 			this->chkRead->Size = System::Drawing::Size(52, 17);
-			this->chkRead->TabIndex = 25;
+			this->chkRead->TabIndex = 9;
 			this->chkRead->Text = L"Read";
 			this->chkRead->UseVisualStyleBackColor = true;
 			// 
@@ -687,6 +686,7 @@ private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  
 			 cmd->ExecuteNonQuery();
 
 			 ClearAllFields();
+			 txtISBN->Text = "";
 			 txtISBN->Focus();
 		 }
 private: System::Void btnClear_Click(System::Object^  sender, System::EventArgs^  e) {
