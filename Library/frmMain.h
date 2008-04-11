@@ -2,6 +2,7 @@
 
 #include "GlobalConnection.h"
 #include "frmAddBook.h"
+#include "frmSimpleSearch.h"
 
 using namespace System;
 using namespace System::ComponentModel;
@@ -45,6 +46,7 @@ namespace Library {
 			}
 		}
 	private: System::Windows::Forms::Button^  btnAdd;
+	private: System::Windows::Forms::Button^  btnSimpleSearch;
 	protected: 
 
 	private:
@@ -61,6 +63,7 @@ namespace Library {
 		void InitializeComponent(void)
 		{
 			this->btnAdd = (gcnew System::Windows::Forms::Button());
+			this->btnSimpleSearch = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// btnAdd
@@ -73,11 +76,22 @@ namespace Library {
 			this->btnAdd->UseVisualStyleBackColor = true;
 			this->btnAdd->Click += gcnew System::EventHandler(this, &frmMain::btnAdd_Click);
 			// 
+			// btnSimpleSearch
+			// 
+			this->btnSimpleSearch->Location = System::Drawing::Point(136, 12);
+			this->btnSimpleSearch->Name = L"btnSimpleSearch";
+			this->btnSimpleSearch->Size = System::Drawing::Size(118, 54);
+			this->btnSimpleSearch->TabIndex = 1;
+			this->btnSimpleSearch->Text = L"Simple Search";
+			this->btnSimpleSearch->UseVisualStyleBackColor = true;
+			this->btnSimpleSearch->Click += gcnew System::EventHandler(this, &frmMain::btnSimpleSearch_Click);
+			// 
 			// frmMain
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(585, 345);
+			this->Controls->Add(this->btnSimpleSearch);
 			this->Controls->Add(this->btnAdd);
 			this->Name = L"frmMain";
 			this->Text = L"Library";
@@ -92,6 +106,10 @@ namespace Library {
 			 }
 	private: System::Void frmMain_Load(System::Object^  sender, System::EventArgs^  e) {
 				 GlobalConnection::OpenConnection();
+			 }
+	private: System::Void btnSimpleSearch_Click(System::Object^  sender, System::EventArgs^  e) {
+				 frmSimpleSearch^ frm = gcnew frmSimpleSearch();
+				 frm->Show();
 			 }
 	};
 }

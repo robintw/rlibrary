@@ -208,6 +208,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\frmSimpleSearch.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GlobalConnection.cpp"
 				>
 			</File>
@@ -261,6 +265,16 @@
 				>
 				<File
 					RelativePath=".\frmMain.resx"
+					SubType="Designer"
+					>
+				</File>
+			</File>
+			<File
+				RelativePath=".\frmSimpleSearch.h"
+				FileType="3"
+				>
+				<File
+					RelativePath=".\frmSimpleSearch.resx"
 					SubType="Designer"
 					>
 				</File>
