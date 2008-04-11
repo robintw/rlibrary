@@ -613,9 +613,12 @@ private: System::Void btnCancel_Click(System::Object^  sender, System::EventArgs
 			 this->Close();
 		 }
 private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  e) {
-			 String^ CommandText = "INSERT INTO Books (Title, Author, Publisher, Type, Dewey, Binding, Pages, Edition, PublicationDate, HaveRead, PriceBought, CoverImage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+			 String^ CommandText = "INSERT INTO Books (ISBN, Title, Author, Publisher, Type, Dewey, Binding, Pages, Edition, PublicationDate, HaveRead, PriceBought, CoverImage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
 			 OdbcCommand^ cmd = gcnew OdbcCommand(CommandText, GlobalConnection::conn);
+
+			 OdbcParameter^ paramISBN = gcnew OdbcParameter("@ISBN", txtISBN->Text);
+			 cmd->Parameters->Add(paramISBN);
 
 			 OdbcParameter^ paramTitle = gcnew OdbcParameter("@Title", txtTitle->Text);
 			 cmd->Parameters->Add(paramTitle);
