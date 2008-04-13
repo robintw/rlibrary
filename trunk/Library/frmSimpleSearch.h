@@ -104,6 +104,7 @@ namespace Library {
 			// 
 			this->lvResults->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(4) {this->columnHeader5, this->columnHeader6, 
 				this->columnHeader7, this->columnHeader8});
+			this->lvResults->FullRowSelect = true;
 			this->lvResults->HideSelection = false;
 			this->lvResults->Location = System::Drawing::Point(12, 38);
 			this->lvResults->MultiSelect = false;
@@ -191,14 +192,14 @@ namespace Library {
 				 while (rdr->Read())
 				 {
 					 ListViewItem^ lvi = lvResults->Items->Add(rdr["ISBN"]->ToString());
-					 lvi->Tag = rdr["CopyID"]->ToString()l
+					 lvi->Tag = rdr["CopyID"]->ToString();
 					 lvi->SubItems->Add(rdr["Title"]->ToString());
 					 lvi->SubItems->Add(rdr["Author"]->ToString());
 					 lvi->SubItems->Add(rdr["Publisher"]->ToString());
 				 }
 			 }
 	private: System::Void lvResults_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
-				 String^ CopyID = lvResults->SelectedItems[0]->Tag;
+				 String^ CopyID = lvResults->SelectedItems[0]->Tag->ToString();
 
 			 }
 };
