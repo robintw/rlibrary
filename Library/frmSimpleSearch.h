@@ -9,6 +9,7 @@ using namespace System::Windows::Forms;
 using namespace System::Data;
 using namespace System::Drawing;
 using namespace System::Data::Odbc;
+using namespace System::IO;
 
 
 namespace Library {
@@ -56,7 +57,8 @@ namespace Library {
 	private: System::Windows::Forms::ColumnHeader^  columnHeader7;
 	private: System::Windows::Forms::ColumnHeader^  columnHeader8;
 	private: System::Windows::Forms::Label^  label1;
-	private: System::Windows::Forms::PictureBox^  pictureBox1;
+	private: System::Windows::Forms::PictureBox^  picCoverImage;
+
 
 	private:
 		/// <summary>
@@ -79,8 +81,8 @@ namespace Library {
 			this->columnHeader7 = (gcnew System::Windows::Forms::ColumnHeader());
 			this->columnHeader8 = (gcnew System::Windows::Forms::ColumnHeader());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->BeginInit();
+			this->picCoverImage = (gcnew System::Windows::Forms::PictureBox());
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->picCoverImage))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// txtSearch
@@ -144,27 +146,28 @@ namespace Library {
 			this->label1->TabIndex = 3;
 			this->label1->Text = L"Search Term:";
 			// 
-			// pictureBox1
+			// picCoverImage
 			// 
-			this->pictureBox1->Location = System::Drawing::Point(707, 340);
-			this->pictureBox1->Name = L"pictureBox1";
-			this->pictureBox1->Size = System::Drawing::Size(247, 220);
-			this->pictureBox1->TabIndex = 4;
-			this->pictureBox1->TabStop = false;
+			this->picCoverImage->Location = System::Drawing::Point(707, 340);
+			this->picCoverImage->Name = L"picCoverImage";
+			this->picCoverImage->Size = System::Drawing::Size(247, 220);
+			this->picCoverImage->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->picCoverImage->TabIndex = 4;
+			this->picCoverImage->TabStop = false;
 			// 
 			// frmSimpleSearch
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(966, 572);
-			this->Controls->Add(this->pictureBox1);
+			this->Controls->Add(this->picCoverImage);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->lvResults);
 			this->Controls->Add(this->btnSearch);
 			this->Controls->Add(this->txtSearch);
 			this->Name = L"frmSimpleSearch";
 			this->Text = L"Library - Simple Search";
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->picCoverImage))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -199,7 +202,31 @@ namespace Library {
 				 }
 			 }
 	private: System::Void lvResults_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+				 if (lvResults->SelectedItems->Count < 1)
+				 {
+					 return;
+				 }
 				 String^ CopyID = lvResults->SelectedItems[0]->Tag->ToString();
+
+				 String^ CommandString = "SELECT * FROM Books WHERE CopyID = ?;";
+
+				 OdbcCommand^ cmd = gcnew OdbcCommand(CommandString, GlobalConnection::conn);
+
+				 OdbcParameter^ paramCopyID = gcnew OdbcParameter("@CopyID", CopyID);
+
+				 cmd->Parameters->Add(paramCopyID);
+
+				 OdbcDataReader^ reader = cmd->ExecuteReader();
+
+				 reader->Read();
+
+				 array<Byte>^ ByteArray = gcnew array<Byte>(reader->GetBytes(12, 0, nullptr, 0, Int32::MaxValue));
+
+				 reader->GetBytes(12, 0, ByteArray, 0, ByteArray->Length);
+
+				 IO::MemoryStream^ ms = gcnew IO::MemoryStream(ByteArray);
+
+				 picCoverImage->Image = Image::FromStream(ms);
 
 			 }
 };
