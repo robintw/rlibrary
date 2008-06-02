@@ -58,6 +58,16 @@ namespace Library {
 	private: System::Windows::Forms::ColumnHeader^  columnHeader8;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::PictureBox^  picCoverImage;
+	private: System::Windows::Forms::Label^  label2;
+	private: System::Windows::Forms::Label^  lblTitle;
+	private: System::Windows::Forms::Label^  label3;
+	private: System::Windows::Forms::Label^  lblAuthor;
+
+	private: System::Windows::Forms::Label^  label5;
+	private: System::Windows::Forms::Label^  lblPublisher;
+
+	private: System::Windows::Forms::Label^  label7;
+	private: System::Windows::Forms::Label^  label8;
 
 
 	private:
@@ -82,6 +92,14 @@ namespace Library {
 			this->columnHeader8 = (gcnew System::Windows::Forms::ColumnHeader());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->picCoverImage = (gcnew System::Windows::Forms::PictureBox());
+			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->lblTitle = (gcnew System::Windows::Forms::Label());
+			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->lblAuthor = (gcnew System::Windows::Forms::Label());
+			this->label5 = (gcnew System::Windows::Forms::Label());
+			this->lblPublisher = (gcnew System::Windows::Forms::Label());
+			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->label8 = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->picCoverImage))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -155,11 +173,83 @@ namespace Library {
 			this->picCoverImage->TabIndex = 4;
 			this->picCoverImage->TabStop = false;
 			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Location = System::Drawing::Point(12, 340);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(30, 13);
+			this->label2->TabIndex = 5;
+			this->label2->Text = L"Title:";
+			// 
+			// lblTitle
+			// 
+			this->lblTitle->Location = System::Drawing::Point(68, 340);
+			this->lblTitle->Name = L"lblTitle";
+			this->lblTitle->Size = System::Drawing::Size(343, 13);
+			this->lblTitle->TabIndex = 6;
+			// 
+			// label3
+			// 
+			this->label3->AutoSize = true;
+			this->label3->Location = System::Drawing::Point(12, 359);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(41, 13);
+			this->label3->TabIndex = 5;
+			this->label3->Text = L"Author:";
+			// 
+			// lblAuthor
+			// 
+			this->lblAuthor->Location = System::Drawing::Point(68, 359);
+			this->lblAuthor->Name = L"lblAuthor";
+			this->lblAuthor->Size = System::Drawing::Size(343, 13);
+			this->lblAuthor->TabIndex = 6;
+			// 
+			// label5
+			// 
+			this->label5->AutoSize = true;
+			this->label5->Location = System::Drawing::Point(12, 380);
+			this->label5->Name = L"label5";
+			this->label5->Size = System::Drawing::Size(50, 13);
+			this->label5->TabIndex = 5;
+			this->label5->Text = L"Publisher";
+			// 
+			// lblPublisher
+			// 
+			this->lblPublisher->Location = System::Drawing::Point(68, 380);
+			this->lblPublisher->Name = L"lblPublisher";
+			this->lblPublisher->Size = System::Drawing::Size(343, 10);
+			this->lblPublisher->TabIndex = 6;
+			// 
+			// label7
+			// 
+			this->label7->AutoSize = true;
+			this->label7->Location = System::Drawing::Point(12, 404);
+			this->label7->Name = L"label7";
+			this->label7->Size = System::Drawing::Size(30, 13);
+			this->label7->TabIndex = 5;
+			this->label7->Text = L"Title:";
+			// 
+			// label8
+			// 
+			this->label8->Location = System::Drawing::Point(48, 404);
+			this->label8->Name = L"label8";
+			this->label8->Size = System::Drawing::Size(343, 13);
+			this->label8->TabIndex = 6;
+			// 
 			// frmSimpleSearch
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(966, 572);
+			this->Controls->Add(this->label8);
+			this->Controls->Add(this->label7);
+			this->Controls->Add(this->lblPublisher);
+			this->Controls->Add(this->label5);
+			this->Controls->Add(this->lblAuthor);
+			this->Controls->Add(this->label3);
+			this->Controls->Add(this->lblTitle);
+			this->Controls->Add(this->label2);
 			this->Controls->Add(this->picCoverImage);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->lvResults);
@@ -227,6 +317,11 @@ namespace Library {
 				 IO::MemoryStream^ ms = gcnew IO::MemoryStream(ByteArray);
 
 				 picCoverImage->Image = Image::FromStream(ms);
+
+				 lblTitle->Text = reader["Title"]->ToString();
+				 lblAuthor->Text = reader["Author"]->ToString();
+				 lblPublisher->Text = reader["Publisher"]->ToString();
+
 
 			 }
 };
