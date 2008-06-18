@@ -626,17 +626,20 @@ private: System::Void btnCancel_Click(System::Object^  sender, System::EventArgs
 private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  e) {
 			 int BookID = AddBook();
 
-			 AddKeywords(txtKeywords->Text);
+			 array<String^>^ Keywords = GetKeywordsArray();
 
-			 LinkKeywordsAndBooks(BookID);
+			 AddKeywords(Keywords);
+
+			 LinkKeywordsAndBooks(BookID, Keywords);
 
 			 ClearAllFields();
 			 txtISBN->Text = "";
 			 txtISBN->Focus();
 		 }
 
-private: System::Void LinkKeywordsAndBooks(int BookID)
+private: array<String^>^ GetKeywordsArray()
 		 {
+			 array<String^>^ EmptyArray = { };
 			 array<String^>^ Splitters = { System::Environment::NewLine };
 			 array<String^>^ Lines = txtKeywords->Text->Split(Splitters, StringSplitOptions::None);
 
@@ -644,14 +647,24 @@ private: System::Void LinkKeywordsAndBooks(int BookID)
 
 			 if (txtKeywords->Text == "")
 			 {
-				 return;
+				 return EmptyArray;
 			 }
 
 			 for (i = 0; i < Lines->Length; i++)
 			 {
 				 Lines[i] = Lines[i]->Trim();
+			 }
 
-				 OdbcCommand^ cmdGetID = gcnew OdbcCommand(String::Format("SELECT ID FROM Keywords WHERE Name = \"{0}\";", Lines[i]), GlobalConnection::conn);
+			 return Lines;
+		 }
+
+private: System::Void LinkKeywordsAndBooks(int BookID, array<String^>^ Keywords)
+		 {
+			 int i, CurrentKeywordID;
+
+			 for (i = 0; i < Keywords->Length; i++)
+			 {
+			 	 OdbcCommand^ cmdGetID = gcnew OdbcCommand(String::Format("SELECT ID FROM Keywords WHERE Name = \"{0}\";", Keywords[i]), GlobalConnection::conn);
 				 CurrentKeywordID = Convert::ToInt32(cmdGetID->ExecuteScalar());
 
 				 String^ CommandText = String::Format("INSERT INTO KeywordsLink VALUES (Null, {0}, {1});", CurrentKeywordID, BookID);
@@ -743,28 +756,19 @@ private: int AddBook()
 			 return Convert::ToInt32(cmdID->ExecuteScalar());
 		 }
 
-private: System::Void AddKeywords(String^ text)
+private: System::Void AddKeywords(array<String^>^ Keywords)
 		 {
-			 array<String^>^ Splitters = { System::Environment::NewLine };
-			 array<String^>^ Lines = text->Split(Splitters, StringSplitOptions::None);
-
 			 int i;
-
-			 if (text == "")
+			 for (i = 0; i < Keywords->Length; i++)
 			 {
-				 return;
-			 }
-
-			 for (i = 0; i < Lines->Length; i++)
-			 {
-				 Lines[i] = Lines[i]->Trim();
-				 String^ CommandString = String::Format("SELECT Count(*) FROM Keywords WHERE Name = \"{0}\";", Lines[i]);
+				 Keywords[i] = Keywords[i]->Trim();
+				 String^ CommandString = String::Format("SELECT Count(*) FROM Keywords WHERE Name = \"{0}\";", Keywords[i]);
 
 				 OdbcCommand^ cmd = gcnew OdbcCommand(CommandString, GlobalConnection::conn);
 
 				 if (Convert::ToInt16(cmd->ExecuteScalar()) == 0)
 				 {
-					 String^ InsertCommand = String::Format("INSERT INTO Keywords VALUES (Null, \"{0}\");", Lines[i]);
+					 String^ InsertCommand = String::Format("INSERT INTO Keywords VALUES (Null, \"{0}\");", Keywords[i]);
 
 					 OdbcCommand^ cmdInsert = gcnew OdbcCommand(InsertCommand, GlobalConnection::conn);
 					 cmdInsert->ExecuteNonQuery();
