@@ -67,7 +67,9 @@ namespace Library {
 	private: System::Windows::Forms::Label^  lblPublisher;
 
 	private: System::Windows::Forms::Label^  label7;
-	private: System::Windows::Forms::Label^  label8;
+	private: System::Windows::Forms::Label^  lblCopyID;
+
+	private: System::Windows::Forms::TextBox^  txtKeywords;
 
 
 	private:
@@ -99,7 +101,8 @@ namespace Library {
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->lblPublisher = (gcnew System::Windows::Forms::Label());
 			this->label7 = (gcnew System::Windows::Forms::Label());
-			this->label8 = (gcnew System::Windows::Forms::Label());
+			this->lblCopyID = (gcnew System::Windows::Forms::Label());
+			this->txtKeywords = (gcnew System::Windows::Forms::TextBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->picCoverImage))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -226,23 +229,32 @@ namespace Library {
 			this->label7->AutoSize = true;
 			this->label7->Location = System::Drawing::Point(12, 404);
 			this->label7->Name = L"label7";
-			this->label7->Size = System::Drawing::Size(30, 13);
+			this->label7->Size = System::Drawing::Size(18, 13);
 			this->label7->TabIndex = 5;
-			this->label7->Text = L"Title:";
+			this->label7->Text = L"ID";
 			// 
-			// label8
+			// lblCopyID
 			// 
-			this->label8->Location = System::Drawing::Point(48, 404);
-			this->label8->Name = L"label8";
-			this->label8->Size = System::Drawing::Size(343, 13);
-			this->label8->TabIndex = 6;
+			this->lblCopyID->Location = System::Drawing::Point(48, 404);
+			this->lblCopyID->Name = L"lblCopyID";
+			this->lblCopyID->Size = System::Drawing::Size(343, 13);
+			this->lblCopyID->TabIndex = 6;
+			// 
+			// txtKeywords
+			// 
+			this->txtKeywords->Location = System::Drawing::Point(12, 429);
+			this->txtKeywords->Multiline = true;
+			this->txtKeywords->Name = L"txtKeywords";
+			this->txtKeywords->Size = System::Drawing::Size(379, 131);
+			this->txtKeywords->TabIndex = 7;
 			// 
 			// frmSimpleSearch
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(966, 572);
-			this->Controls->Add(this->label8);
+			this->Controls->Add(this->txtKeywords);
+			this->Controls->Add(this->lblCopyID);
 			this->Controls->Add(this->label7);
 			this->Controls->Add(this->lblPublisher);
 			this->Controls->Add(this->label5);
@@ -321,6 +333,16 @@ namespace Library {
 				 lblTitle->Text = reader["Title"]->ToString();
 				 lblAuthor->Text = reader["Author"]->ToString();
 				 lblPublisher->Text = reader["Publisher"]->ToString();
+				 lblCopyID->Text = reader["CopyID"]->ToString();
+
+				 OdbcCommand^ cmdKeywords = gcnew OdbcCommand(String::Format("SELECT Name FROM Keywords, KeywordsLink WHERE KeywordsLink.BookID = {0} AND KeywordsLink.KeywordID = Keywords.ID;", reader["CopyID"]->ToString()), GlobalConnection::conn);
+				 OdbcDataReader^ rdrKeywords = cmdKeywords->ExecuteReader();
+
+				 while (rdrKeywords->Read())
+				 {
+					 txtKeywords->AppendText(String::Concat(rdrKeywords["Name"], Environment::NewLine));
+				 }
+
 
 
 			 }
