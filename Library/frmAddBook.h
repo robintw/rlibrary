@@ -88,6 +88,7 @@ namespace Library {
 	private: System::Windows::Forms::Label^  label10;
 	private: System::Windows::Forms::CheckBox^  chkRead;
 	private: System::Windows::Forms::Button^  btnClear;
+	private: System::Windows::Forms::TextBox^  txtKeywords;
 
 
 
@@ -141,6 +142,7 @@ namespace Library {
 			this->label10 = (gcnew System::Windows::Forms::Label());
 			this->chkRead = (gcnew System::Windows::Forms::CheckBox());
 			this->btnClear = (gcnew System::Windows::Forms::Button());
+			this->txtKeywords = (gcnew System::Windows::Forms::TextBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->picImage))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
@@ -427,12 +429,21 @@ namespace Library {
 			this->btnClear->UseVisualStyleBackColor = true;
 			this->btnClear->Click += gcnew System::EventHandler(this, &frmAddBook::btnClear_Click);
 			// 
+			// txtKeywords
+			// 
+			this->txtKeywords->Location = System::Drawing::Point(572, 9);
+			this->txtKeywords->Multiline = true;
+			this->txtKeywords->Name = L"txtKeywords";
+			this->txtKeywords->Size = System::Drawing::Size(261, 174);
+			this->txtKeywords->TabIndex = 25;
+			// 
 			// frmAddBook
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->CancelButton = this->btnCancel;
-			this->ClientSize = System::Drawing::Size(576, 370);
+			this->ClientSize = System::Drawing::Size(845, 370);
+			this->Controls->Add(this->txtKeywords);
 			this->Controls->Add(this->chkRead);
 			this->Controls->Add(this->label10);
 			this->Controls->Add(this->label9);
@@ -613,7 +624,45 @@ private: System::Void btnCancel_Click(System::Object^  sender, System::EventArgs
 			 this->Close();
 		 }
 private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  e) {
-			 String^ CommandText = "INSERT INTO Books (ISBN, Title, Author, Publisher, Type, Dewey, Binding, Pages, Edition, PublicationDate, HaveRead, PriceBought, CoverImage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+			 int BookID = AddBook();
+
+			 AddKeywords(txtKeywords->Text);
+
+			 LinkKeywordsAndBooks(BookID);
+
+			 ClearAllFields();
+			 txtISBN->Text = "";
+			 txtISBN->Focus();
+		 }
+
+private: System::Void LinkKeywordsAndBooks(int BookID)
+		 {
+			 array<String^>^ Splitters = { System::Environment::NewLine };
+			 array<String^>^ Lines = txtKeywords->Text->Split(Splitters, StringSplitOptions::None);
+
+			 int i, CurrentKeywordID;
+
+			 if (txtKeywords->Text == "")
+			 {
+				 return;
+			 }
+
+			 for (i = 0; i < Lines->Length; i++)
+			 {
+				 Lines[i] = Lines[i]->Trim();
+
+				 OdbcCommand^ cmdGetID = gcnew OdbcCommand(String::Format("SELECT ID FROM Keywords WHERE Name = \"{0}\";", Lines[i]), GlobalConnection::conn);
+				 CurrentKeywordID = Convert::ToInt32(cmdGetID->ExecuteScalar());
+
+				 String^ CommandText = String::Format("INSERT INTO KeywordsLink VALUES (Null, {0}, {1});", CurrentKeywordID, BookID);
+				 OdbcCommand^ cmdInsert = gcnew OdbcCommand(CommandText, GlobalConnection::conn);
+				 cmdInsert->ExecuteNonQuery();
+			 }
+		 }
+
+private: int AddBook()
+		 {
+			 String^ CommandText = "INSERT INTO Books (ISBN, Title, Author, Publisher, Type, Dewey, Binding, Pages, Edition, PublicationDate, HaveRead, PriceBought, CoverImage, DateAdded) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
 			 OdbcCommand^ cmd = gcnew OdbcCommand(CommandText, GlobalConnection::conn);
 
@@ -648,8 +697,6 @@ private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  
 			 DateTime date = DateTime::ParseExact(txtPubDate->Text,Formats, System::Globalization::CultureInfo::InvariantCulture, System::Globalization::DateTimeStyles::RoundtripKind);
 			 OdbcParameter^ paramPubDate = gcnew OdbcParameter("@PublicationDate", date);
 			 cmd->Parameters->Add(paramPubDate);
-
-
 
 			 OdbcParameter^ paramRead = gcnew OdbcParameter("@HaveRead", chkRead->Checked);
 			 cmd->Parameters->Add(paramRead);
@@ -686,12 +733,45 @@ private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  
 				 cmd->Parameters->Add(paramCoverImage);
 			 }
 
+			 OdbcParameter^ paramDateAdded = gcnew OdbcParameter("@DateAdded", DateTime::Now.Date);
+			 cmd->Parameters->Add(paramDateAdded);
+
 			 cmd->ExecuteNonQuery();
 
-			 ClearAllFields();
-			 txtISBN->Text = "";
-			 txtISBN->Focus();
+			 OdbcCommand^ cmdID = gcnew OdbcCommand("SELECT LAST_INSERT_ID();", GlobalConnection::conn);
+			 
+			 return Convert::ToInt32(cmdID->ExecuteScalar());
 		 }
+
+private: System::Void AddKeywords(String^ text)
+		 {
+			 array<String^>^ Splitters = { System::Environment::NewLine };
+			 array<String^>^ Lines = text->Split(Splitters, StringSplitOptions::None);
+
+			 int i;
+
+			 if (text == "")
+			 {
+				 return;
+			 }
+
+			 for (i = 0; i < Lines->Length; i++)
+			 {
+				 Lines[i] = Lines[i]->Trim();
+				 String^ CommandString = String::Format("SELECT Count(*) FROM Keywords WHERE Name = \"{0}\";", Lines[i]);
+
+				 OdbcCommand^ cmd = gcnew OdbcCommand(CommandString, GlobalConnection::conn);
+
+				 if (Convert::ToInt16(cmd->ExecuteScalar()) == 0)
+				 {
+					 String^ InsertCommand = String::Format("INSERT INTO Keywords VALUES (Null, \"{0}\");", Lines[i]);
+
+					 OdbcCommand^ cmdInsert = gcnew OdbcCommand(InsertCommand, GlobalConnection::conn);
+					 cmdInsert->ExecuteNonQuery();
+				 }
+			 }
+		 }
+
 private: System::Void btnClear_Click(System::Object^  sender, System::EventArgs^  e) {
 			 ClearAllFields();
 			 txtISBN->Text = "";
