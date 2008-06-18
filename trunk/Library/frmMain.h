@@ -47,6 +47,7 @@ namespace Library {
 		}
 	private: System::Windows::Forms::Button^  btnAdd;
 	private: System::Windows::Forms::Button^  btnSimpleSearch;
+
 	protected: 
 
 	private:
