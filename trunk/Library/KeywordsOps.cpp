@@ -73,3 +73,17 @@ StringCollection^ KeywordsOps::GetKeywordsStringCollection()
 {
 	return Keywords;
 }
+
+array<String^>^ KeywordsOps::GetAllKeywords()
+{
+	Keywords->Clear();
+	OdbcCommand^ cmd = gcnew OdbcCommand("SELECT Name FROM Keywords;", GlobalConnection::conn);
+	OdbcDataReader^ rdr = cmd->ExecuteReader();
+
+	while (rdr->Read())
+	{
+		Keywords->Add(rdr["Name"]->ToString());
+	}
+
+	return GetKeywordsArray();
+}
