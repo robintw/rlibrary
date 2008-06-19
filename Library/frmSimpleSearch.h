@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GlobalConnection.h"
+#include "KeywordsOps.h"
 
 using namespace System;
 using namespace System::ComponentModel;
@@ -335,14 +336,16 @@ namespace Library {
 				 lblPublisher->Text = reader["Publisher"]->ToString();
 				 lblCopyID->Text = reader["CopyID"]->ToString();
 
-				 OdbcCommand^ cmdKeywords = gcnew OdbcCommand(String::Format("SELECT Name FROM Keywords, KeywordsLink WHERE KeywordsLink.BookID = {0} AND KeywordsLink.KeywordID = Keywords.ID;", reader["CopyID"]->ToString()), GlobalConnection::conn);
-				 OdbcDataReader^ rdrKeywords = cmdKeywords->ExecuteReader();
+				 KeywordsOps^ kwo = gcnew KeywordsOps();
 
-				 while (rdrKeywords->Read())
+				 array<String^>^ Keywords = kwo->GetKeywordsForBook(Convert::ToInt32(reader["CopyID"]));
+
+				 int i;
+				 for (i = 0; i < Keywords->Length; i++)
 				 {
-					 txtKeywords->AppendText(String::Concat(rdrKeywords["Name"], Environment::NewLine));
+					 txtKeywords->AppendText(String::Concat(Keywords[i], Environment::NewLine));
 				 }
-
+				 
 
 
 			 }

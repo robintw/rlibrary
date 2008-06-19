@@ -1,5 +1,6 @@
 #include "GlobalConnection.h"
 #include "ISBNOps.h"
+#include "KeywordsOps.h"
 
 using namespace System;
 using namespace System::ComponentModel;
@@ -628,9 +629,11 @@ private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  
 
 			 array<String^>^ Keywords = GetKeywordsArray();
 
-			 AddKeywords(Keywords);
+			 KeywordsOps^ kwo = gcnew KeywordsOps(Keywords);
 
-			 LinkKeywordsAndBooks(BookID, Keywords);
+			 kwo->AddKeywordsToDB();
+
+			 kwo->LinkKeywordsAndBook(BookID);
 
 			 ClearAllFields();
 			 txtISBN->Text = "";
@@ -656,21 +659,6 @@ private: array<String^>^ GetKeywordsArray()
 			 }
 
 			 return Lines;
-		 }
-
-private: System::Void LinkKeywordsAndBooks(int BookID, array<String^>^ Keywords)
-		 {
-			 int i, CurrentKeywordID;
-
-			 for (i = 0; i < Keywords->Length; i++)
-			 {
-			 	 OdbcCommand^ cmdGetID = gcnew OdbcCommand(String::Format("SELECT ID FROM Keywords WHERE Name = \"{0}\";", Keywords[i]), GlobalConnection::conn);
-				 CurrentKeywordID = Convert::ToInt32(cmdGetID->ExecuteScalar());
-
-				 String^ CommandText = String::Format("INSERT INTO KeywordsLink VALUES (Null, {0}, {1});", CurrentKeywordID, BookID);
-				 OdbcCommand^ cmdInsert = gcnew OdbcCommand(CommandText, GlobalConnection::conn);
-				 cmdInsert->ExecuteNonQuery();
-			 }
 		 }
 
 private: int AddBook()
@@ -756,25 +744,7 @@ private: int AddBook()
 			 return Convert::ToInt32(cmdID->ExecuteScalar());
 		 }
 
-private: System::Void AddKeywords(array<String^>^ Keywords)
-		 {
-			 int i;
-			 for (i = 0; i < Keywords->Length; i++)
-			 {
-				 Keywords[i] = Keywords[i]->Trim();
-				 String^ CommandString = String::Format("SELECT Count(*) FROM Keywords WHERE Name = \"{0}\";", Keywords[i]);
 
-				 OdbcCommand^ cmd = gcnew OdbcCommand(CommandString, GlobalConnection::conn);
-
-				 if (Convert::ToInt16(cmd->ExecuteScalar()) == 0)
-				 {
-					 String^ InsertCommand = String::Format("INSERT INTO Keywords VALUES (Null, \"{0}\");", Keywords[i]);
-
-					 OdbcCommand^ cmdInsert = gcnew OdbcCommand(InsertCommand, GlobalConnection::conn);
-					 cmdInsert->ExecuteNonQuery();
-				 }
-			 }
-		 }
 
 private: System::Void btnClear_Click(System::Object^  sender, System::EventArgs^  e) {
 			 ClearAllFields();
