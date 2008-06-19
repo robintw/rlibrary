@@ -18,6 +18,7 @@ public:
 	void AddKeywordsToDB();
 	void LinkKeywordsAndBook(int BookID);
 	array<String^>^ GetKeywordsForBook(int BookID);
+	array<String^>^ GetAllKeywords();
 
 	array<String^>^ GetKeywordsArray();
 	StringCollection^ GetKeywordsStringCollection();

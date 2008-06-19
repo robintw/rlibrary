@@ -48,6 +48,8 @@ namespace Library {
 		}
 
 	private: String^ DetailsURL;
+	private: int KeywordsBoxNumber;
+	private: Collections::ArrayList^ KeywordsTextBoxes;
 
 	private: System::Windows::Forms::TextBox^  txtISBN;
 	protected: 
@@ -89,7 +91,10 @@ namespace Library {
 	private: System::Windows::Forms::Label^  label10;
 	private: System::Windows::Forms::CheckBox^  chkRead;
 	private: System::Windows::Forms::Button^  btnClear;
-	private: System::Windows::Forms::TextBox^  txtKeywords;
+
+	private: System::Windows::Forms::TextBox^  txtKeywords1;
+	private: System::Windows::Forms::Label^  label11;
+
 
 
 
@@ -143,7 +148,8 @@ namespace Library {
 			this->label10 = (gcnew System::Windows::Forms::Label());
 			this->chkRead = (gcnew System::Windows::Forms::CheckBox());
 			this->btnClear = (gcnew System::Windows::Forms::Button());
-			this->txtKeywords = (gcnew System::Windows::Forms::TextBox());
+			this->txtKeywords1 = (gcnew System::Windows::Forms::TextBox());
+			this->label11 = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->picImage))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
@@ -216,6 +222,7 @@ namespace Library {
 			// 
 			// picImage
 			// 
+			this->picImage->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
 			this->picImage->Location = System::Drawing::Point(269, 6);
 			this->picImage->Name = L"picImage";
 			this->picImage->Size = System::Drawing::Size(297, 320);
@@ -430,13 +437,24 @@ namespace Library {
 			this->btnClear->UseVisualStyleBackColor = true;
 			this->btnClear->Click += gcnew System::EventHandler(this, &frmAddBook::btnClear_Click);
 			// 
-			// txtKeywords
+			// txtKeywords1
 			// 
-			this->txtKeywords->Location = System::Drawing::Point(572, 9);
-			this->txtKeywords->Multiline = true;
-			this->txtKeywords->Name = L"txtKeywords";
-			this->txtKeywords->Size = System::Drawing::Size(261, 174);
-			this->txtKeywords->TabIndex = 25;
+			this->txtKeywords1->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::Suggest;
+			this->txtKeywords1->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
+			this->txtKeywords1->Location = System::Drawing::Point(575, 22);
+			this->txtKeywords1->Name = L"txtKeywords1";
+			this->txtKeywords1->Size = System::Drawing::Size(156, 20);
+			this->txtKeywords1->TabIndex = 26;
+			this->txtKeywords1->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &frmAddBook::txtKeywords1_KeyUp);
+			// 
+			// label11
+			// 
+			this->label11->AutoSize = true;
+			this->label11->Location = System::Drawing::Point(572, 6);
+			this->label11->Name = L"label11";
+			this->label11->Size = System::Drawing::Size(56, 13);
+			this->label11->TabIndex = 27;
+			this->label11->Text = L"Keywords:";
 			// 
 			// frmAddBook
 			// 
@@ -444,7 +462,8 @@ namespace Library {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->CancelButton = this->btnCancel;
 			this->ClientSize = System::Drawing::Size(845, 370);
-			this->Controls->Add(this->txtKeywords);
+			this->Controls->Add(this->label11);
+			this->Controls->Add(this->txtKeywords1);
 			this->Controls->Add(this->chkRead);
 			this->Controls->Add(this->label10);
 			this->Controls->Add(this->label9);
@@ -487,7 +506,14 @@ namespace Library {
 		}
 #pragma endregion
 	private: System::Void frmAddBook_Load(System::Object^  sender, System::EventArgs^  e) {
-				 
+				 KeywordsOps^ kwo = gcnew KeywordsOps();
+				 txtKeywords1->AutoCompleteCustomSource->AddRange(kwo->GetAllKeywords());
+
+				 KeywordsBoxNumber = 1;
+
+				 KeywordsTextBoxes = gcnew ArrayList();
+
+				 KeywordsTextBoxes->Add(txtKeywords1);
 			 }
 
 	 private: System::Void ClearAllFields()
@@ -642,23 +668,42 @@ private: System::Void btnAdd_Click(System::Object^  sender, System::EventArgs^  
 
 private: array<String^>^ GetKeywordsArray()
 		 {
+			 //array<String^>^ EmptyArray = { };
+			 //array<String^>^ Splitters = { System::Environment::NewLine };
+			 //array<String^>^ Lines = txtKeywords->Text->Split(Splitters, StringSplitOptions::None);
+
+			 //int i, CurrentKeywordID;
+
+			 //if (txtKeywords->Text == "")
+			 //{
+				// return EmptyArray;
+			 //}
+
+			 //for (i = 0; i < Lines->Length; i++)
+			 //{
+				// Lines[i] = Lines[i]->Trim();
+			 //}
+
 			 array<String^>^ EmptyArray = { };
-			 array<String^>^ Splitters = { System::Environment::NewLine };
-			 array<String^>^ Lines = txtKeywords->Text->Split(Splitters, StringSplitOptions::None);
+			 ArrayList^ Keywords = gcnew ArrayList();
 
-			 int i, CurrentKeywordID;
+			 int i;
 
-			 if (txtKeywords->Text == "")
+			 for (i = 0; i < KeywordsTextBoxes->Count; i++)
 			 {
-				 return EmptyArray;
+				 TextBox^ CurrentTextBox = (TextBox^)KeywordsTextBoxes[i];
+				 if (CurrentTextBox->Text == "")
+				 {
+					 break;
+				 }
+				 else
+				 {
+					 Keywords->Add(CurrentTextBox->Text);
+				 }
 			 }
-
-			 for (i = 0; i < Lines->Length; i++)
-			 {
-				 Lines[i] = Lines[i]->Trim();
-			 }
-
-			 return Lines;
+			 array<String^>^ KeywordsToReturn = gcnew array<String^>(Keywords->Count);
+			 Keywords->CopyTo(KeywordsToReturn);
+			 return KeywordsToReturn;
 		 }
 
 private: int AddBook()
@@ -750,6 +795,33 @@ private: System::Void btnClear_Click(System::Object^  sender, System::EventArgs^
 			 ClearAllFields();
 			 txtISBN->Text = "";
 			 txtISBN->Focus();
+		 }
+private: System::Void txtKeywords1_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+			 if (e->KeyCode == Keys::Return)
+			 {
+				 TextBox^ txtNew = gcnew TextBox();
+				 KeywordsBoxNumber++;
+
+				txtNew->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::Suggest;
+				txtNew->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
+				txtNew->Location = System::Drawing::Point(575, 22 + ((KeywordsBoxNumber - 1) * 30));
+				txtNew->Name = String::Format("txtKeywords{0}", KeywordsBoxNumber);
+				txtNew->Size = System::Drawing::Size(156, 20);
+				txtNew->TabIndex = 26;
+				txtNew->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &frmAddBook::txtKeywords1_KeyUp);
+
+				KeywordsOps^ kwo = gcnew KeywordsOps();
+				txtNew->AutoCompleteCustomSource->AddRange(kwo->GetAllKeywords());
+
+				this->Controls->Add(txtNew);
+				
+				txtNew->Focus();
+
+				KeywordsTextBoxes->Add(txtNew);
+
+			 }
+
+
 		 }
 };
 }
