@@ -220,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\KeywordsOps.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Library.cpp"
 				>
 			</File>
@@ -285,6 +289,10 @@
 			</File>
 			<File
 				RelativePath=".\ISBNOps.h"
+				>
+			</File>
+			<File
+				RelativePath=".\KeywordsOps.h"
 				>
 			</File>
 			<File
