@@ -461,7 +461,7 @@ namespace Library {
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->CancelButton = this->btnCancel;
-			this->ClientSize = System::Drawing::Size(845, 370);
+			this->ClientSize = System::Drawing::Size(740, 370);
 			this->Controls->Add(this->label11);
 			this->Controls->Add(this->txtKeywords1);
 			this->Controls->Add(this->chkRead);
