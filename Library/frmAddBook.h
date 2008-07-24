@@ -445,6 +445,7 @@ namespace Library {
 			this->txtKeywords1->Name = L"txtKeywords1";
 			this->txtKeywords1->Size = System::Drawing::Size(156, 20);
 			this->txtKeywords1->TabIndex = 26;
+			this->txtKeywords1->TextChanged += gcnew System::EventHandler(this, &frmAddBook::txtKeywords1_TextChanged);
 			this->txtKeywords1->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &frmAddBook::txtKeywords1_KeyUp);
 			// 
 			// label11
@@ -537,11 +538,26 @@ namespace Library {
 
 				  picImage->Image = nullptr;
 				  picImage->ImageLocation = nullptr;
+
+				  int i;
+
+				  // NOTE: Loop is backwards
+				  for (i = KeywordsTextBoxes->Count-1; i > 0 ; i--)
+				  {
+					  TextBox^ tb = (TextBox^)KeywordsTextBoxes[i];
+					  this->Controls->RemoveByKey(tb->Name);
+					  KeywordsTextBoxes->Remove(i);
+				  }
+
+				  TextBox^ tb1 = (TextBox^)KeywordsTextBoxes[0];
+				  tb1->Text = "";
+
+				  KeywordsBoxNumber = 1;
 			  }
 
 	 private: System::Void GetDetailsFromInternet()
 			  {
-				  ClearAllFields();
+				  //ClearAllFields();
 				  String^ ISBN = txtISBN->Text;
 
 				  XmlDocument^ xmldoc = gcnew XmlDocument();
@@ -822,6 +838,8 @@ private: System::Void txtKeywords1_KeyUp(System::Object^  sender, System::Window
 			 }
 
 
+		 }
+private: System::Void txtKeywords1_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }
 };
 }
