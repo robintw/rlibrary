@@ -2,6 +2,7 @@
 
 #include "GlobalConnection.h"
 #include "KeywordsOps.h"
+#include "ListViewItemComparer.h"
 
 using namespace System;
 using namespace System::ComponentModel;
@@ -59,6 +60,7 @@ namespace Library {
 	private: System::Windows::Forms::ColumnHeader^  columnHeader8;
 	private: System::Windows::Forms::Label^  label1;
 	private: BookDetails::BookDetailsControl^  ctrlBookDetails;
+	private: System::Windows::Forms::Button^  button1;
 
 
 
@@ -121,6 +123,7 @@ namespace Library {
 			this->columnHeader8 = (gcnew System::Windows::Forms::ColumnHeader());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->ctrlBookDetails = (gcnew BookDetails::BookDetailsControl());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// txtSearch
@@ -150,10 +153,12 @@ namespace Library {
 			this->lvResults->MultiSelect = false;
 			this->lvResults->Name = L"lvResults";
 			this->lvResults->Size = System::Drawing::Size(942, 296);
+			this->lvResults->Sorting = System::Windows::Forms::SortOrder::Ascending;
 			this->lvResults->TabIndex = 2;
 			this->lvResults->UseCompatibleStateImageBehavior = false;
 			this->lvResults->View = System::Windows::Forms::View::Details;
 			this->lvResults->SelectedIndexChanged += gcnew System::EventHandler(this, &frmSimpleSearch::lvResults_SelectedIndexChanged);
+			this->lvResults->ColumnClick += gcnew System::Windows::Forms::ColumnClickEventHandler(this, &frmSimpleSearch::lvResults_ColumnClick);
 			// 
 			// columnHeader5
 			// 
@@ -191,12 +196,23 @@ namespace Library {
 			this->ctrlBookDetails->Size = System::Drawing::Size(955, 269);
 			this->ctrlBookDetails->TabIndex = 4;
 			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(525, 9);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(75, 23);
+			this->button1->TabIndex = 5;
+			this->button1->Text = L"button1";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &frmSimpleSearch::button1_Click);
+			// 
 			// frmSimpleSearch
 			// 
 			this->AcceptButton = this->btnSearch;
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(966, 596);
+			this->Controls->Add(this->button1);
 			this->Controls->Add(this->ctrlBookDetails);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->lvResults);
@@ -213,7 +229,7 @@ namespace Library {
 	private: System::Void btnSearch_Click(System::Object^  sender, System::EventArgs^  e) {
 				 lvResults->Items->Clear();
 
-				 Odbc::OdbcCommand^ cmd = gcnew Odbc::OdbcCommand("SELECT CopyID, ISBN, Title, Author, Publisher FROM Books WHERE ISBN LIKE ? OR Title LIKE ? OR Author LIKE ? OR Publisher LIKE ?;", GlobalConnection::conn);
+				 Odbc::OdbcCommand^ cmd = gcnew Odbc::OdbcCommand("SELECT CopyID, ISBN, Title, Author, Publisher FROM Books LEFT OUTER JOIN KeywordsLink ON KeywordsLink.BookID = Books.CopyID LEFT OUTER JOIN Keywords ON Keywords.ID = KeywordsLink.KeywordID WHERE Books.ISBN LIKE ? OR Books.Title LIKE ? OR Books.Author LIKE ? OR Books.Publisher LIKE ? OR Keywords.Name LIKE ?;", GlobalConnection::conn);
 
 				 OdbcParameter^ paramISBN = gcnew OdbcParameter("@ISBN", String::Concat("%", txtSearch->Text, "%"));
 				 cmd->Parameters->Add(paramISBN);
@@ -226,6 +242,9 @@ namespace Library {
 
 				 OdbcParameter^ paramPublisher = gcnew OdbcParameter("@Publisher", String::Concat("%", txtSearch->Text, "%"));
 				 cmd->Parameters->Add(paramPublisher);
+
+				 OdbcParameter^ paramKeywords = gcnew OdbcParameter("@Keywords", String::Concat("%", txtSearch->Text, "%"));
+				 cmd->Parameters->Add(paramKeywords);
 
 				 OdbcDataReader^ rdr = cmd->ExecuteReader();
 
@@ -265,6 +284,12 @@ namespace Library {
 
 			 }
 private: System::Void frmSimpleSearch_Load(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+			 lvResults->Sort();
+		 }
+private: System::Void lvResults_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e) {
+			 lvResults->ListViewItemSorter = gcnew ListViewItemComparer(e->Column);
 		 }
 };
 }

@@ -444,7 +444,14 @@ public: void ShowDetails(OdbcDataReader^ reader, array<String^>^ Keywords)
 
 		IO::MemoryStream^ ms = gcnew IO::MemoryStream(ByteArray);
 
-		picCoverImage->Image = Image::FromStream(ms);
+		if (ms->Length != 0)
+		{
+			picCoverImage->Image = Image::FromStream(ms);
+		}
+		else
+		{
+			picCoverImage->Image = nullptr;
+		}
 
 		lblTitle->Text = reader["Title"]->ToString();
 		lblAuthor->Text = reader["Author"]->ToString();

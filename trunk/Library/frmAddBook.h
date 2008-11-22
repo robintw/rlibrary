@@ -656,6 +656,12 @@ namespace Library {
 private: System::Void txtISBN_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
 			 if (e->KeyCode == Keys::Return)
 			 {
+				 if (txtISBN->Text->Contains(" "))
+				 {
+					 //Remove anything after a space (to stop it reading two barcodes at once)
+					 int SpacePosition = txtISBN->Text->IndexOf(" ");
+					 txtISBN->Text = txtISBN->Text->Substring(0,SpacePosition);
+				 }
 				 txtISBN->Text = ISBNOps::Process(txtISBN->Text);
 				 GetDetailsFromInternet();
 			 }

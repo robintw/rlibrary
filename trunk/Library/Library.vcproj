@@ -190,7 +190,7 @@
 		/>
 		<AssemblyReference
 			RelativePath="..\BookDetails\debug\BookDetails.dll"
-			AssemblyName="BookDetails, Version=1.0.3094.29189, processorArchitecture=IA64"
+			AssemblyName="BookDetails, Version=1.0.3247.31939, processorArchitecture=IA64"
 		/>
 		<AssemblyReference
 			RelativePath="Microsoft.VisualC.Dll"
@@ -241,6 +241,10 @@
 			</File>
 			<File
 				RelativePath=".\Library.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ListViewItemComparer.cpp"
 				>
 			</File>
 			<File
@@ -329,6 +333,10 @@
 			</File>
 			<File
 				RelativePath=".\KeywordsOps.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ListViewItemComparer.h"
 				>
 			</File>
 			<File
