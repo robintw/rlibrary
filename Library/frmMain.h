@@ -4,6 +4,7 @@
 #include "frmAddBook.h"
 #include "frmSimpleSearch.h"
 #include "frmAdvSearch.h"
+#include "frmFvsNFGraph.h"
 
 using namespace System;
 using namespace System::ComponentModel;
@@ -50,6 +51,7 @@ namespace Library {
 	private: System::Windows::Forms::Button^  btnSimpleSearch;
 	private: System::Windows::Forms::Button^  btnAdvSearch;
 	private: System::Windows::Forms::PictureBox^  pictureBox1;
+	private: System::Windows::Forms::Button^  button1;
 
 	protected: 
 
@@ -71,6 +73,7 @@ namespace Library {
 			this->btnSimpleSearch = (gcnew System::Windows::Forms::Button());
 			this->btnAdvSearch = (gcnew System::Windows::Forms::Button());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -113,11 +116,22 @@ namespace Library {
 			this->pictureBox1->TabIndex = 2;
 			this->pictureBox1->TabStop = false;
 			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(489, 282);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(75, 23);
+			this->button1->TabIndex = 3;
+			this->button1->Text = L"button1";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &frmMain::button1_Click);
+			// 
 			// frmMain
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(585, 417);
+			this->Controls->Add(this->button1);
 			this->Controls->Add(this->pictureBox1);
 			this->Controls->Add(this->btnAdvSearch);
 			this->Controls->Add(this->btnSimpleSearch);
@@ -145,5 +159,9 @@ namespace Library {
 				 frmAdvSearch^ frm = gcnew frmAdvSearch();
 				 frm->Show();
 			 }
+private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+			 frmFvsNFGraph^ frm = gcnew frmFvsNFGraph();
+			 frm->Show();
+		 }
 };
 }

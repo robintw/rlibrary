@@ -196,6 +196,10 @@
 			RelativePath="Microsoft.VisualC.Dll"
 			AssemblyName="Microsoft.VisualC, Version=8.0.0.0, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
 		/>
+		<AssemblyReference
+			RelativePath="..\lib\ZedGraph.dll"
+			AssemblyName="ZedGraph, Version=5.1.4.31904, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL"
+		/>
 	</References>
 	<Files>
 		<Filter
@@ -217,6 +221,10 @@
 			</File>
 			<File
 				RelativePath=".\frmEditBook.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\frmFvsNFGraph.cpp"
 				>
 			</File>
 			<File
@@ -299,6 +307,16 @@
 				>
 				<File
 					RelativePath=".\frmEditBook.resx"
+					SubType="Designer"
+					>
+				</File>
+			</File>
+			<File
+				RelativePath=".\frmFvsNFGraph.h"
+				FileType="3"
+				>
+				<File
+					RelativePath=".\frmFvsNFGraph.resx"
 					SubType="Designer"
 					>
 				</File>
