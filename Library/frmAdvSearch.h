@@ -1,11 +1,16 @@
 #pragma once
 
+#include "GlobalConnection.h"
+#include "KeywordsOps.h"
+
 using namespace System;
 using namespace System::ComponentModel;
 using namespace System::Collections;
 using namespace System::Windows::Forms;
 using namespace System::Data;
 using namespace System::Drawing;
+using namespace System::Data;
+using namespace System::Data::Odbc;
 
 
 namespace Library {
@@ -107,6 +112,7 @@ namespace Library {
 			this->lvResults->TabIndex = 5;
 			this->lvResults->UseCompatibleStateImageBehavior = false;
 			this->lvResults->View = System::Windows::Forms::View::Details;
+			this->lvResults->SelectedIndexChanged += gcnew System::EventHandler(this, &frmAdvSearch::lvResults_SelectedIndexChanged);
 			// 
 			// columnHeader5
 			// 
@@ -322,6 +328,45 @@ private: System::Void btnSearch_Click(System::Object^  sender, System::EventArgs
 				 CommandText = CommandText + " AND " + Conditions[i]->ToString();
 			 }
 			 MessageBox::Show(CommandText);
+
+			 lvResults->Items->Clear();
+			 
+			 Odbc::OdbcCommand^ cmd = gcnew Odbc::OdbcCommand(CommandText, GlobalConnection::conn);
+
+			 OdbcDataReader^ rdr = cmd->ExecuteReader();
+
+			 while (rdr->Read())
+			 {
+				 ListViewItem^ lvi = lvResults->Items->Add(rdr["ISBN"]->ToString());
+				 lvi->Tag = rdr["CopyID"]->ToString();
+				 lvi->SubItems->Add(rdr["Title"]->ToString());
+				 lvi->SubItems->Add(rdr["Author"]->ToString());
+				 lvi->SubItems->Add(rdr["Publisher"]->ToString());
+			 }
+		 }
+private: System::Void lvResults_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+			 if (lvResults->SelectedItems->Count < 1)
+				 {
+					 return;
+				 }
+				 String^ CopyID = lvResults->SelectedItems[0]->Tag->ToString();
+
+				 String^ CommandString = "SELECT * FROM Books WHERE CopyID = ?;";
+
+				 OdbcCommand^ cmd = gcnew OdbcCommand(CommandString, GlobalConnection::conn);
+
+				 OdbcParameter^ paramCopyID = gcnew OdbcParameter("@CopyID", CopyID);
+
+				 cmd->Parameters->Add(paramCopyID);
+
+				 OdbcDataReader^ reader = cmd->ExecuteReader();
+
+				 KeywordsOps^ kwo = gcnew KeywordsOps();
+
+				 array<String^>^ Keywords = kwo->GetKeywordsForBook(Convert::ToInt32(CopyID));
+				 //array<String^>^ Keywords = { };
+
+				 ctrlBookDetails->ShowDetails(reader, Keywords);
 		 }
 };
 }
