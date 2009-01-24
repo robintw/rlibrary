@@ -806,7 +806,7 @@ private: int AddBook()
 
 			 cmd->ExecuteNonQuery();
 
-			 OdbcCommand^ cmdID = gcnew OdbcCommand("SELECT LAST_INSERT_ID();", GlobalConnection::conn);
+			 OdbcCommand^ cmdID = gcnew OdbcCommand("SELECT last_insert_rowid();", GlobalConnection::conn);
 			 
 			 return Convert::ToInt32(cmdID->ExecuteScalar());
 		 }
