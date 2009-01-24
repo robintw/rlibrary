@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TagControlTest", "TagControlTest\TagControlTest.vcproj", "{2745FBDD-7A0F-42C8-9E08-F3456B7A7E9B}"
 EndProject
 Global
